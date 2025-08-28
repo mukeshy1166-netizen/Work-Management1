@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Sinchan's 21-Day Adventure! 🌟</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #FF6B9D;
+            --secondary: #FFE066;
+            --accent: #C44569;
+            --success: #32CD32;
+            --danger: #FF4757;
+            --bg-gradient: linear-gradient(135deg, #FFE066, #FF6B9D, #C44569, #F8B500);
+        }
+        
+        .theme-ocean {
+            --primary: #4ECDC4;
+            --secondary: #45B7D1;
+            --accent: #2C3E50;
+            --success: #27AE60;
+            --danger: #E74C3C;
+            --bg-gradient: linear-gradient(135deg, #74b9ff, #0984e3, #6c5ce7, #a29bfe);
+        }
+        
+        .theme-forest {
+            --primary: #2ECC71;
+            --secondary: #F39C12;
+            --accent: #27AE60;
+            --success: #16A085;
+            --danger: #E67E22;
+            --bg-gradient: linear-gradient(135deg, #00b894, #00cec9, #fdcb6e, #e17055);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body { 
+            font-family: 'Comic Neue', cursive; 
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            margin: 0; padding: 10px;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-gradient); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .login-card {
+            background: rgba(255,255,255,0.95);
+            padding: 40px; border-radius: 25px;
+            border: 5px solid var(--primary);
+            text-align: center; max-width: 400px; width: 90%;
+        }
+        
+        .container { 
+            max-width: 1200px; margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px; padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 5px solid var(--primary);
+        }
+        
+        .header {
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap;
+            margin-bottom: 20px; gap: 10px;
+        }
+        
+        .controls {
+            display: flex; gap: 10px; flex-wrap: wrap;
+        }
+        
+        .theme-selector, .category-filter {
+            padding: 8px 15px; border-radius: 20px;
+            border: 2px solid var(--primary);
+            background: white; font-family: inherit;
+        }
+        
+        h1 {
+            text-align: center; font-size: clamp(1.5em, 4vw, 2.5em);
+            color: var(--primary); text-shadow: 3px 3px 0px var(--secondary);
+            margin: 10px 0; transform: rotate(-2deg);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, var(--secondary), #FFF);
+            padding: 15px; border-radius: 15px;
+            border: 3px solid var(--primary);
+            text-align: center;
+        }
+        
+        .weekly-summary {
+            background: linear-gradient(45deg, var(--success), #FFF);
+            padding: 20px; border-radius: 20px;
+            margin: 20px 0; border: 3px solid var(--success);
+        }
+        
+        .leaderboard {
+            background: linear-gradient(45deg, var(--accent), #FFF);
+            padding: 20px; border-radius: 20px;
+            margin: 20px 0; border: 3px solid var(--accent);
+        }
+        
+        .user-performance {
+            background: linear-gradient(45deg, #9b59b6, #FFF);
+            padding: 20px; border-radius: 20px;
+            margin: 20px 0; border: 3px solid #9b59b6;
+            display: none;
+        }
+        
+        .user-card {
+            background: rgba(255,255,255,0.9);
+            padding: 15px; margin: 10px 0;
+            border-radius: 15px; border: 2px solid var(--secondary);
+            cursor: pointer; transition: all 0.3s ease;
+            display: flex; justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .performance-details {
+            background: rgba(255,255,255,0.95);
+            padding: 20px; border-radius: 15px;
+            margin: 15px 0; border: 2px solid var(--primary);
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px; margin: 15px 0;
+        }
+        
+        .performance-stat {
+            background: var(--secondary);
+            padding: 10px; border-radius: 10px;
+            text-align: center; font-weight: bold;
+        }
+        
+        .day-progress {
+            display: flex; flex-wrap: wrap;
+            gap: 5px; margin: 10px 0;
+        }
+        
+        .day-indicator {
+            width: 30px; height: 30px;
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 12px; font-weight: bold;
+            color: white;
+        }
+        
+        .day-completed { background: var(--success); }
+        .day-partial { background: #F39C12; }
+        .day-empty { background: #BDC3C7; }
+        
+        .day { 
+            background: linear-gradient(45deg, var(--secondary), #FFF);
+            margin: 15px 0; padding: 20px; border-radius: 20px;
+            border: 3px solid var(--primary);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .day:hover { transform: scale(1.02); }
+        
+        .sunday { 
+            background: linear-gradient(45deg, var(--success), #FFF);
+            border-color: var(--success);
+        }
+        
+        .task-input-row {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .task-input {
+            flex: 1; min-width: 200px;
+            padding: 12px 15px; border: 3px solid var(--primary);
+            border-radius: 25px; font-family: inherit;
+            background: #FFF;
+        }
+        
+        .priority-select, .category-select {
+            padding: 12px; border: 3px solid var(--primary);
+            border-radius: 20px; background: white;
+            font-family: inherit;
+        }
+        
+        .task { 
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px; margin: 8px 0;
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px; border: 2px solid var(--secondary);
+            cursor: grab; transition: all 0.3s ease;
+        }
+        
+        .task:hover { transform: translateY(-2px); }
+        .task.dragging { opacity: 0.5; transform: rotate(5deg); }
+        
+        .priority-high { border-left: 5px solid var(--danger); }
+        .priority-medium { border-left: 5px solid #F39C12; }
+        .priority-low { border-left: 5px solid var(--success); }
+        
+        .category-tag {
+            background: var(--primary); color: white;
+            padding: 4px 8px; border-radius: 10px;
+            font-size: 12px; font-weight: bold;
+        }
+        
+        .task-text { flex: 1; font-weight: bold; color: var(--accent); }
+        .completed { text-decoration: line-through; opacity: 0.6; }
+        
+        .suggestions {
+            background: rgba(255,255,255,0.9);
+            border: 2px solid var(--secondary);
+            border-radius: 15px; padding: 15px;
+            margin: 10px 0; display: none;
+        }
+        
+        .suggestion-item {
+            padding: 8px; margin: 5px 0;
+            background: var(--secondary); border-radius: 10px;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        
+        .suggestion-item:hover { transform: scale(1.05); }
+        
+        .idea-tag:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .offline-indicator {
+            position: fixed; top: 10px; right: 60px;
+            background: var(--danger); color: white;
+            padding: 8px 15px; border-radius: 20px;
+            display: none;
+        }
+        
+        .delete-account-btn {
+            position: fixed; top: 10px; right: 10px;
+            background: var(--danger); color: white;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; cursor: pointer;
+            font-size: 16px; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .delete-account-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+
+        
+        .btn {
+            padding: 10px 15px; background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white; border: none; border-radius: 20px;
+            cursor: pointer; font-family: inherit; font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover { transform: translateY(-2px); }
+        .btn-small { padding: 6px 10px; font-size: 12px; }
+        .btn-success { background: linear-gradient(45deg, var(--success), #27AE60); }
+        .btn-danger { background: linear-gradient(45deg, var(--danger), #C0392B); }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; text-align: center; }
+            .controls { justify-content: center; }
+            .task-input-row { flex-direction: column; }
+            .task { flex-wrap: wrap; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 5px; }
+            .container { border-radius: 15px; }
+            h1 { font-size: 1.5em; }
+            .day { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator" id="offlineIndicator">📡 Offline Mode</div>
+    <button class="delete-account-btn" id="deleteAccountBtn" onclick="deleteAccount()" title="Delete Account" style="display: none;">🗑️</button>
+    
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h2>🌟 Welcome to Sinchan's Adventure! 🌟</h2>
+            <input type="text" id="usernameInput" placeholder="Enter your name" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 20px; border: 2px solid var(--primary);">
+            <button class="btn" onclick="login()">🚀 Start Adventure!</button>
+        </div>
+    </div>
+    
+    <div class="container" id="mainApp" style="display: none;">
+        <div class="header">
+            <div>
+                <h1>🌟 <span id="userName">Sinchan</span>'s 21-Day Adventure! 🌟</h1>
+                <p style="text-align: center; color: var(--accent); font-weight: bold;">"Let's make every day super fun and productive!"</p>
+
+            </div>
+            <div class="controls">
+                <select class="theme-selector" onchange="changeTheme(this.value)">
+                    <option value="default">🎨 Sinchan Theme</option>
+                    <option value="ocean">🌊 Ocean Theme</option>
+                    <option value="forest">🌲 Forest Theme</option>
+                </select>
+                <select class="category-filter" onchange="filterByCategory(this.value)">
+                    <option value="all">📋 All Categories</option>
+                    <option value="work">💼 Work</option>
+                    <option value="personal">👤 Personal</option>
+                    <option value="health">💪 Health</option>
+                    <option value="learning">📚 Learning</option>
+                </select>
+                <button class="btn btn-small" onclick="toggleSuggestions()">💡 Smart Tips</button>
+                <button class="btn btn-small" onclick="toggleUserPerformance()">👥 View Users</button>
+                <button class="btn btn-small" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>📅 Today's Progress</h3>
+                <div style="position: relative; background: var(--secondary); height: 30px; border-radius: 15px; overflow: hidden; border: 2px solid var(--primary);">
+                    <div id="progressFill" style="height: 100%; background: linear-gradient(45deg, var(--success), #27AE60); width: 0%; transition: width 0.5s; border-radius: 13px;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); font-size: 14px; z-index: 10;" id="progressText">
+                        🇮🇳 Loading...
+                    </div>
+                </div>
+                <p>🚀 Day <span id="currentDay">1</span> of 21</p>
+                <p style="font-size: 12px; color: var(--accent);" id="challengeDay">📅 Your personal challenge</p>
+                <p style="font-size: 12px; color: var(--primary);" id="todayStats">🎯 Today: 0/0 tasks</p>
+                <p style="font-size: 11px; color: var(--accent);" id="loginInfo">📅 Login info</p>
+            </div>
+            <div class="stat-card">
+                <h3>✅ Completed</h3>
+                <p style="font-size: 2em; color: var(--success);"><span id="completedTasks">0</span></p>
+            </div>
+            <div class="stat-card">
+                <h3>🎯 Total Tasks</h3>
+                <p style="font-size: 2em; color: var(--primary);"><span id="totalTasks">0</span></p>
+            </div>
+        </div>
+        
+        <div class="weekly-summary">
+            <h3>📈 Weekly Summary</h3>
+            <div id="weeklySummary">Week 1: Getting started! 🌟</div>
+        </div>
+        
+        <div class="leaderboard">
+            <h3>🏆 Leaderboard</h3>
+            <div id="leaderboardList">Loading amazing adventurers... 🚀</div>
+        </div>
+        
+        <div class="user-performance" id="userPerformance">
+            <h3>👥 User Performance Dashboard</h3>
+            <div id="usersList"></div>
+            <div id="selectedUserDetails"></div>
+        </div>
+        
+        <div class="suggestions" id="suggestions">
+            <h3>💡 Smart Suggestions</h3>
+            <div id="suggestionsList"></div>
+        </div>
+        
+        <div id="daysList"></div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let tasks = JSON.parse(localStorage.getItem('sinchanTasks') || '{}');
+        let users = JSON.parse(localStorage.getItem('sinchanUsers') || '[]');
+        let challengeStartDate = null;
+        
+        // India timezone utilities
+        function getIndianTime() {
+            return new Date().toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                hour12: true,
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function getIndianDate() {
+            return new Date().toLocaleDateString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        
+        function getCurrentDayOfWeek() {
+            return new Date().toLocaleDateString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                weekday: 'long'
+            });
+        }
+        
+        function calculateChallengeDay() {
+            if (!challengeStartDate) return 1;
+            
+            const today = new Date();
+            const start = new Date(challengeStartDate);
+            
+            // Set both dates to start of day in Indian timezone for accurate day calculation
+            const todayIST = new Date(today.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }));
+            const startIST = new Date(start.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }));
+            
+            const diffTime = todayIST - startIST;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 because day 1 starts on start date
+            
+            return Math.max(1, Math.min(diffDays, 21));
+        }
+        
+        function updateTimeDisplay() {
+            if (challengeStartDate) {
+                const challengeDay = calculateChallengeDay();
+                const startDate = new Date(challengeStartDate).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
+                const daysRemaining = Math.max(0, 21 - challengeDay);
+                
+                document.getElementById('currentDay').textContent = challengeDay;
+                
+                if (challengeDay <= 21) {
+                    document.getElementById('challengeDay').textContent = `Started: ${startDate} | ${daysRemaining} days left! 🔥`;
+                    document.getElementById('loginInfo').textContent = `📅 Joined: ${startDate} | Completed: ${challengeDay - 1} days`;
+                } else {
+                    document.getElementById('challengeDay').textContent = `Challenge completed! Started: ${startDate} 🏆`;
+                    document.getElementById('loginInfo').textContent = `🏆 Challenge completed in 21 days! Joined: ${startDate}`;
+                }
+            } else {
+                document.getElementById('loginInfo').textContent = `📅 Welcome! Start your challenge today`;
+            }
+        }
+        
+        // Update time every minute
+        setInterval(updateTimeDisplay, 60000);
+        
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].concat(
+            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        );
+        
+        const suggestions = {
+            work: ['📧 Check emails', '📞 Team meeting', '📊 Review reports', '💼 Client call'],
+            personal: ['🛒 Grocery shopping', '🧹 Clean room', '📱 Call family', '🎬 Watch movie'],
+            health: ['🏃 Morning run', '🥗 Healthy meal', '💧 Drink water', '😴 Sleep early'],
+            learning: ['📖 Read book', '💻 Online course', '🎯 Practice skill', '📝 Take notes']
+        };
+        
+        const motivationalQuotes = [
+            '🌟 "Success is not final, failure is not fatal: it is the courage to continue that counts." - Winston Churchill',
+            '💪 "The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt',
+            '🎯 "Don\'t watch the clock; do what it does. Keep going." - Sam Levenson',
+            '🚀 "The only way to do great work is to love what you do." - Steve Jobs',
+            '🌈 "Believe you can and you\'re halfway there." - Theodore Roosevelt',
+            '📚 "Education is the most powerful weapon which you can use to change the world." - Nelson Mandela',
+            '✨ "Your limitation—it\'s only your imagination."',
+            '🏆 "Great things never come from comfort zones."',
+            '🔥 "Dream it. Wish it. Do it."',
+            '🌱 "Success doesn\'t just find you. You have to go out and get it."'
+        ];
+        
+        const studentTips = [
+            '📝 Study for 25 minutes, then take 5-minute break (Pomodoro)',
+            '🌅 Wake up early - your brain is freshest in the morning',
+            '📱 Keep phone away while studying - focus is key',
+            '💧 Drink water regularly - hydration boosts brain power',
+            '📚 Review notes within 24 hours - improves retention by 60%',
+            '😴 Get 7-8 hours sleep - your brain consolidates memory during sleep',
+            '🎵 Listen to instrumental music while studying',
+            '🥗 Eat brain foods: nuts, berries, fish, dark chocolate',
+            '📝 Make flashcards for quick revision',
+            '🎯 Set small daily goals instead of big weekly ones',
+            '📚 Teach someone else - best way to test your understanding',
+            '🏃 Exercise 20 minutes daily - improves memory and focus',
+            '🗺️ Use mind maps for complex topics',
+            '⏰ Study difficult subjects when you\'re most alert',
+            '📝 Write summaries in your own words',
+            '🌟 Reward yourself after completing study goals',
+            '📵 Turn off notifications during study time',
+            '📚 Read actively - highlight, question, summarize',
+            '🧘 Practice meditation - improves concentration',
+            '📅 Plan your day the night before'
+        ];
+        
+        function login() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (!username) return alert('Please enter your name! 😊');
+            
+            currentUser = username;
+            document.getElementById('userName').textContent = username;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('deleteAccountBtn').style.display = 'flex';
+            
+            let user = users.find(u => u.name === username);
+            if (!user) {
+                // New user - challenge starts today
+                const today = new Date();
+                user = { 
+                    name: username, 
+                    score: 0, 
+                    joinDate: today.toISOString(),
+                    challengeStartDate: today.toISOString()
+                };
+                users.push(user);
+                alert(`🎉 Welcome ${username}! Your 21-day challenge starts TODAY! 🚀`);
+                saveData();
+            } else {
+                // Returning user
+                const challengeDay = calculateChallengeDay();
+                if (challengeDay <= 21) {
+                    alert(`🔥 Welcome back ${username}! You're on Day ${challengeDay} of your challenge! 💪`);
+                } else {
+                    alert(`🏆 Congratulations ${username}! You've completed your 21-day challenge! Start a new one? 🎯`);
+                }
+            }
+            
+            challengeStartDate = user.challengeStartDate;
+            updateTimeDisplay();
+            loadUserData();
+            createDays();
+            updateStats();
+            updateLeaderboard();
+        }
+        
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('deleteAccountBtn').style.display = 'none';
+        }
+        
+        function deleteAccount() {
+            if (!currentUser) return;
+            
+            const confirmDelete = confirm(`🚨 Are you sure you want to delete your account "${currentUser}"?\n\nThis will permanently delete:\n• All your tasks and progress\n• Your challenge history\n• Your leaderboard position\n\nThis action cannot be undone!`);
+            
+            if (!confirmDelete) return;
+            
+            const finalConfirm = confirm(`🗑️ FINAL CONFIRMATION\n\nType your username to confirm deletion:\nExpected: ${currentUser}\n\nAre you absolutely sure?`);
+            
+            if (!finalConfirm) return;
+            
+            // Delete user data
+            users = users.filter(u => u.name !== currentUser);
+            delete tasks[currentUser];
+            
+            // Save updated data
+            saveData();
+            
+            alert(`👋 Account "${currentUser}" has been permanently deleted.\nThank you for using Sinchan's Adventure!`);
+            
+            // Logout user
+            logout();
+        }
+        
+        function changeTheme(theme) {
+            document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+            localStorage.setItem('sinchanTheme', theme);
+        }
+        
+        function createDays() {
+            const daysList = document.getElementById('daysList');
+            daysList.innerHTML = '';
+            days.forEach((day, index) => {
+                const isSunday = day === 'Sunday';
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `day ${isSunday ? 'sunday' : ''}`;
+                const currentChallengeDay = calculateChallengeDay();
+                const isToday = currentChallengeDay === (index + 1) && currentChallengeDay <= 21;
+                dayDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span style="font-weight: bold; font-size: 1.2em; color: var(--accent);">Day ${index + 1} - ${day} ${isToday ? '🔥 TODAY' : currentChallengeDay > (index + 1) ? '✅ DONE' : '⏳ UPCOMING'}</span>
+                        <span style="background: ${isSunday ? 'var(--success)' : isToday ? 'var(--danger)' : currentChallengeDay > (index + 1) ? 'var(--success)' : '#BDC3C7'}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px;">
+                            ${isSunday ? '🌈 Chill Day' : isToday ? '🔥 TODAY' : currentChallengeDay > (index + 1) ? '✅ COMPLETED' : '⏳ UPCOMING'}
+                        </span>
+                    </div>
+                    ${!isSunday ? `
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn btn-small" onclick="showDayIdeas(${index})" style="background: var(--secondary); color: var(--accent); width: 40px; height: 40px; border-radius: 50%; padding: 0; font-size: 18px;" title="Get Ideas">💡</button>
+                        </div>
+                        <div class="day-ideas" id="dayIdeas-${index}" style="display: none; margin: 0 0 15px 0; padding: 10px; background: rgba(255,230,102,0.3); border-radius: 10px; border: 2px dashed var(--secondary);"></div>
+                        <div class="task-input-row">
+                            <input type="text" class="task-input" placeholder="🎯 What's your mission for Day ${index + 1}?" onkeypress="if(event.key==='Enter') addTask(${index})">
+                            <select class="priority-select">
+                                <option value="low">🟢 Low</option>
+                                <option value="medium">🟡 Medium</option>
+                                <option value="high">🔴 High</option>
+                            </select>
+                            <select class="category-select">
+                                <option value="work">💼 Work</option>
+                                <option value="personal">👤 Personal</option>
+                                <option value="health">💪 Health</option>
+                                <option value="learning">📚 Learning</option>
+                            </select>
+                            <button class="btn" onclick="addTask(${index})">➕ Add</button>
+                        </div>
+                    ` : '<div style="color: var(--success); font-style: italic; text-align: center; background: rgba(50,205,50,0.2); padding: 15px; border-radius: 15px; border: 2px dashed var(--success);">🌈 Revision & Chill Day! 🍃<br>Time to review your awesome progress and have some fun! 🎉</div>'}
+                    <div class="task-list" id="tasks-${index}" ondrop="drop(event, ${index})" ondragover="allowDrop(event)"></div>
+                `;
+                daysList.appendChild(dayDiv);
+            });
+            loadTasks();
+        }
+        
+        function addTask(dayIndex) {
+            const dayDiv = document.querySelector(`#daysList .day:nth-child(${dayIndex + 1})`);
+            const input = dayDiv.querySelector('.task-input');
+            const priority = dayDiv.querySelector('.priority-select').value;
+            const category = dayDiv.querySelector('.category-select').value;
+            
+            if (!input || !input.value.trim()) return;
+            
+            const task = {
+                id: Date.now(),
+                text: input.value.trim(),
+                priority,
+                category,
+                completed: false,
+                day: dayIndex
+            };
+            
+            if (!tasks[currentUser]) tasks[currentUser] = [];
+            tasks[currentUser].push(task);
+            
+            renderTask(task, dayIndex);
+            input.value = '';
+            saveData();
+            updateStats();
+        }
+        
+        function renderTask(task, dayIndex) {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = `task priority-${task.priority} ${task.completed ? 'completed' : ''}`;
+            taskDiv.draggable = true;
+            taskDiv.ondragstart = (e) => drag(e, task.id);
+            taskDiv.innerHTML = `
+                <span class="category-tag">${getCategoryIcon(task.category)}</span>
+                <span class="task-text" onclick="toggleTask(${task.id})">${task.text}</span>
+                <button class="btn btn-small btn-danger" onclick="deleteTask(${task.id})">🗑️</button>
+            `;
+            document.getElementById(`tasks-${dayIndex}`).appendChild(taskDiv);
+        }
+        
+        function getCategoryIcon(category) {
+            const icons = { work: '💼', personal: '👤', health: '💪', learning: '📚' };
+            return icons[category] || '📝';
+        }
+        
+        getCategoryIcon.work = '💼';
+        getCategoryIcon.personal = '👤';
+        getCategoryIcon.health = '💪';
+        getCategoryIcon.learning = '📚';
+        
+        function showDayIdeas(dayIndex) {
+            const ideasDiv = document.getElementById(`dayIdeas-${dayIndex}`);
+            const isVisible = ideasDiv.style.display === 'block';
+            
+            if (isVisible) {
+                ideasDiv.style.display = 'none';
+                return;
+            }
+            
+            ideasDiv.style.display = 'block';
+            ideasDiv.innerHTML = `
+                <h5 style="color: var(--accent); margin: 0 0 10px 0;">💡 Quick Ideas for Day ${dayIndex + 1}:</h5>
+                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                    ${Object.entries(suggestions).map(([category, tasks]) => 
+                        tasks.map(task => 
+                            `<span class="idea-tag" onclick="addQuickIdea('${task}', ${dayIndex})" style="background: var(--primary); color: white; padding: 4px 8px; border-radius: 15px; font-size: 12px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">${task}</span>`
+                        ).join('')
+                    ).join('')}
+                </div>
+            `;
+            
+            // Scroll to ideas section
+            setTimeout(() => {
+                ideasDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        function addQuickIdea(ideaText, dayIndex) {
+            const input = document.querySelector(`#daysList .day:nth-child(${dayIndex + 1}) .task-input`);
+            if (input) {
+                input.value = ideaText.split(' ').slice(1).join(' ');
+                input.focus();
+            }
+        }
+        
+        function toggleTask(taskId) {
+            const task = tasks[currentUser]?.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveData();
+                updateStats();
+                updateLeaderboard();
+                createDays();
+            }
+        }
+        
+        function deleteTask(taskId) {
+            if (tasks[currentUser]) {
+                tasks[currentUser] = tasks[currentUser].filter(t => t.id !== taskId);
+                saveData();
+                updateStats();
+                createDays();
+            }
+        }
+        
+        function drag(e, taskId) {
+            e.dataTransfer.setData('text/plain', taskId);
+            e.target.classList.add('dragging');
+        }
+        
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+        
+        function drop(e, dayIndex) {
+            e.preventDefault();
+            const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+            const task = tasks[currentUser]?.find(t => t.id === taskId);
+            if (task) {
+                task.day = dayIndex;
+                saveData();
+                createDays();
+            }
+        }
+        
+        function filterByCategory(category) {
+            const allTasks = document.querySelectorAll('.task');
+            allTasks.forEach(task => {
+                const categoryTag = task.querySelector('.category-tag').textContent;
+                const taskCategory = Object.keys(getCategoryIcon).find(key => getCategoryIcon(key) === categoryTag);
+                task.style.display = (category === 'all' || taskCategory === category) ? 'flex' : 'none';
+            });
+        }
+        
+        function toggleSuggestions() {
+            const suggestionsDiv = document.getElementById('suggestions');
+            const isVisible = suggestionsDiv.style.display === 'block';
+            suggestionsDiv.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                const suggestionsList = document.getElementById('suggestionsList');
+                suggestionsList.innerHTML = '';
+                
+                setTimeout(() => {
+                    suggestionsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+                
+                // Add motivational quote section
+                const quoteDiv = document.createElement('div');
+                quoteDiv.innerHTML = `<h4 style="color: var(--primary); margin: 15px 0 10px 0;">🌟 Daily Motivation</h4>`;
+                suggestionsList.appendChild(quoteDiv);
+                
+                const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+                const quoteItem = document.createElement('div');
+                quoteItem.className = 'suggestion-item';
+                quoteItem.style.background = 'linear-gradient(45deg, var(--primary), var(--accent))';
+                quoteItem.style.color = 'white';
+                quoteItem.style.fontStyle = 'italic';
+                quoteItem.textContent = randomQuote;
+                suggestionsList.appendChild(quoteItem);
+                
+                // Add student tips section
+                const tipsDiv = document.createElement('div');
+                tipsDiv.innerHTML = `<h4 style="color: var(--success); margin: 15px 0 10px 0;">🎯 Student Success Tips</h4>`;
+                suggestionsList.appendChild(tipsDiv);
+                
+                // Show 5 random student tips
+                const randomTips = studentTips.sort(() => 0.5 - Math.random()).slice(0, 5);
+                randomTips.forEach(tip => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.style.background = 'linear-gradient(45deg, var(--success), #27AE60)';
+                    div.style.color = 'white';
+                    div.textContent = tip;
+                    div.onclick = () => {
+                        const input = document.querySelector('.task-input');
+                        if (input) input.value = tip.split(' ').slice(1).join(' ');
+                    };
+                    suggestionsList.appendChild(div);
+                });
+                
+
+            }
+        }
+        
+        function updateStats() {
+            const userTasks = tasks[currentUser] || [];
+            const currentChallengeDay = calculateChallengeDay();
+            
+            // Today's tasks only (current challenge day)
+            const todayTasks = userTasks.filter(t => t.day === (currentChallengeDay - 1));
+            const todayCompleted = todayTasks.filter(t => t.completed).length;
+            const todayTotal = todayTasks.length;
+            const todayProgress = todayTotal > 0 ? (todayCompleted / todayTotal) * 100 : 0;
+            
+            // Overall stats
+            const totalCompleted = userTasks.filter(t => t.completed).length;
+            const totalTasks = userTasks.length;
+            
+            // Update progress bar
+            document.getElementById('completedTasks').textContent = totalCompleted;
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('progressFill').style.width = todayProgress + '%';
+            document.getElementById('progressText').textContent = `${Math.round(todayProgress)}% Complete`;
+            document.getElementById('todayStats').textContent = `🎯 Today: ${todayCompleted}/${todayTotal} tasks`;
+            
+            updateTimeDisplay();
+            updateWeeklySummary();
+        }
+        
+        function updateWeeklySummary() {
+            const userTasks = tasks[currentUser] || [];
+            const weeks = [0, 7, 14, 21];
+            const currentChallengeDay = calculateChallengeDay();
+            const currentWeek = Math.ceil(Math.min(currentChallengeDay, 21) / 7);
+            const startDate = new Date(challengeStartDate).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
+            let summary = `<p style="color: var(--primary); font-weight: bold;">📅 Challenge Started: ${startDate} | Day: ${currentChallengeDay}/21 | Week: ${currentWeek}</p>`;
+            
+            for (let i = 0; i < 3; i++) {
+                const weekTasks = userTasks.filter(t => t.day >= weeks[i] && t.day < weeks[i + 1]);
+                const completed = weekTasks.filter(t => t.completed).length;
+                const isCurrentWeek = (i + 1) === currentWeek;
+                summary += `Week ${i + 1}${isCurrentWeek ? ' (Current)' : ''}: ${completed}/${weekTasks.length} tasks completed 🎯<br>`;
+            }
+            
+            document.getElementById('weeklySummary').innerHTML = summary || 'Start adding tasks to see your weekly progress! 🚀';
+        }
+        
+        function updateLeaderboard() {
+            users.forEach(user => {
+                const userTasks = tasks[user.name] || [];
+                user.score = userTasks.filter(t => t.completed).length;
+                user.totalTasks = userTasks.length;
+                user.completionRate = user.totalTasks > 0 ? Math.round((user.score / user.totalTasks) * 100) : 0;
+            });
+            
+            users.sort((a, b) => b.score - a.score);
+            
+            const leaderboardHTML = users.slice(0, 5).map((user, index) => 
+                `<div class="user-card" onclick="showUserDetails('${user.name}')">
+                    <span>${['🥇', '🥈', '🥉', '🏅', '🏅'][index]} ${user.name}</span>
+                    <span>${user.score}/${user.totalTasks} (${user.completionRate}%) ✅</span>
+                </div>`
+            ).join('');
+            
+            document.getElementById('leaderboardList').innerHTML = leaderboardHTML || 'Be the first to complete tasks! 🌟';
+            updateUsersList();
+        }
+        
+        function toggleUserPerformance() {
+            const performanceDiv = document.getElementById('userPerformance');
+            const isVisible = performanceDiv.style.display === 'block';
+            performanceDiv.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                setTimeout(() => {
+                    performanceDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+        
+        function updateUsersList() {
+            const usersListHTML = users.map(user => 
+                `<div class="user-card" onclick="showUserDetails('${user.name}')">
+                    <div>
+                        <strong>${user.name}</strong> ${user.name === currentUser ? '(You)' : ''}<br>
+                        <small>Joined: ${new Date(user.joinDate).toLocaleDateString()}</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <div>${user.score}/${user.totalTasks} tasks</div>
+                        <div style="color: var(--success);">${user.completionRate}% complete</div>
+                    </div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('usersList').innerHTML = usersListHTML || 'No users found! 🤔';
+        }
+        
+        function showUserDetails(username) {
+            const user = users.find(u => u.name === username);
+            const userTasks = tasks[username] || [];
+            
+            if (!user) return;
+            
+            // Ensure user performance section is visible
+            const performanceDiv = document.getElementById('userPerformance');
+            if (performanceDiv.style.display !== 'block') {
+                performanceDiv.style.display = 'block';
+            }
+            
+            // Calculate detailed stats
+            const categoryStats = {};
+            const priorityStats = { high: 0, medium: 0, low: 0 };
+            const dailyProgress = new Array(21).fill(0);
+            
+            userTasks.forEach(task => {
+                // Category stats
+                if (!categoryStats[task.category]) categoryStats[task.category] = { total: 0, completed: 0 };
+                categoryStats[task.category].total++;
+                if (task.completed) categoryStats[task.category].completed++;
+                
+                // Priority stats
+                if (task.completed) priorityStats[task.priority]++;
+                
+                // Daily progress
+                if (task.day < 21) {
+                    dailyProgress[task.day] += task.completed ? 1 : 0.5;
+                }
+            });
+            
+            const weeklyStats = [];
+            for (let week = 0; week < 3; week++) {
+                const weekTasks = userTasks.filter(t => t.day >= week * 7 && t.day < (week + 1) * 7);
+                const weekCompleted = weekTasks.filter(t => t.completed).length;
+                weeklyStats.push({ total: weekTasks.length, completed: weekCompleted });
+            }
+            
+            const detailsHTML = `
+                <div class="performance-details">
+                    <h3>📊 ${username}'s Performance ${username === currentUser ? '(You)' : ''}</h3>
+                    
+                    <div class="performance-grid">
+                        <div class="performance-stat">
+                            <div style="font-size: 1.5em; color: var(--success);">${user.score}</div>
+                            <div>Completed Tasks</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div style="font-size: 1.5em; color: var(--primary);">${user.totalTasks}</div>
+                            <div>Total Tasks</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div style="font-size: 1.5em; color: var(--accent);">${user.completionRate}%</div>
+                            <div>Completion Rate</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div style="font-size: 1.5em; color: #9b59b6;">${Math.ceil((Date.now() - new Date(user.joinDate)) / (1000 * 60 * 60 * 24))}</div>
+                            <div>Days Active (IST)</div>
+                        </div>
+                    </div>
+                    
+                    <h4>📈 Weekly Progress</h4>
+                    <div class="performance-grid">
+                        ${weeklyStats.map((week, index) => 
+                            `<div class="performance-stat">
+                                <div>Week ${index + 1}</div>
+                                <div style="color: var(--success);">${week.completed}/${week.total}</div>
+                                <div>${week.total > 0 ? Math.round((week.completed / week.total) * 100) : 0}%</div>
+                            </div>`
+                        ).join('')}
+                    </div>
+                    
+                    <h4>📋 Category Breakdown</h4>
+                    <div class="performance-grid">
+                        ${Object.entries(categoryStats).map(([category, stats]) => 
+                            `<div class="performance-stat">
+                                <div>${getCategoryIcon(category)} ${category}</div>
+                                <div style="color: var(--success);">${stats.completed}/${stats.total}</div>
+                                <div>${stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%</div>
+                            </div>`
+                        ).join('')}
+                    </div>
+                    
+                    <h4>⚡ Priority Completed</h4>
+                    <div class="performance-grid">
+                        <div class="performance-stat">
+                            <div style="color: var(--danger);">🔴 High: ${priorityStats.high}</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div style="color: #F39C12;">🟡 Medium: ${priorityStats.medium}</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div style="color: var(--success);">🟢 Low: ${priorityStats.low}</div>
+                        </div>
+                    </div>
+                    
+                    <h4>📅 21-Day Progress Map</h4>
+                    <div class="day-progress">
+                        ${dailyProgress.map((progress, index) => {
+                            let className = 'day-empty';
+                            if (progress >= 1) className = 'day-completed';
+                            else if (progress > 0) className = 'day-partial';
+                            return `<div class="day-indicator ${className}" title="Day ${index + 1}">${index + 1}</div>`;
+                        }).join('')}
+                    </div>
+                    <p style="font-size: 12px; color: var(--accent);">🟢 = All tasks done, 🟡 = Some tasks done, ⚪ = No tasks</p>
+                </div>
+            `;
+            
+            document.getElementById('selectedUserDetails').innerHTML = detailsHTML;
+            
+            // Scroll to user details
+            setTimeout(() => {
+                document.getElementById('selectedUserDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+        
+        function loadTasks() {
+            const userTasks = tasks[currentUser] || [];
+            userTasks.forEach(task => renderTask(task, task.day));
+        }
+        
+        function loadUserData() {
+            const savedTheme = localStorage.getItem('sinchanTheme');
+            if (savedTheme && savedTheme !== 'default') {
+                document.body.className = `theme-${savedTheme}`;
+                document.querySelector('.theme-selector').value = savedTheme;
+            }
+        }
+        
+        function saveData() {
+            localStorage.setItem('sinchanTasks', JSON.stringify(tasks));
+            localStorage.setItem('sinchanUsers', JSON.stringify(users));
+        }
+        
+        // Offline support
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').style.display = 'none';
+        });
+        
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').style.display = 'block';
+        });
+        
+        // Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch", e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))))');
+        }
+        
+        // Initialize time display on page load
+        updateTimeDisplay();
+    </script>
+</body>
+</html>
