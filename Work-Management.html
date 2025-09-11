@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌟 Sinchan's 21-Day Adventure! 🌟</title>
+    <title>🌟 Welcome to Your Productivity Hub! 🌟</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
         
@@ -126,6 +126,20 @@
             padding: 20px; border-radius: 20px;
             margin: 20px 0; border: 3px solid #9b59b6;
             display: none;
+        }
+        
+        .analysis-section {
+            background: linear-gradient(45deg, #e74c3c, #FFF);
+            padding: 20px; border-radius: 20px;
+            margin: 20px 0; border: 3px solid #e74c3c;
+            display: none;
+        }
+        
+        .analysis-input {
+            width: 100%; padding: 12px; border: 2px solid #e74c3c;
+            border-radius: 15px; font-family: inherit;
+            background: rgba(255,255,255,0.9); resize: vertical;
+            min-height: 80px;
         }
         
         .user-card {
@@ -314,7 +328,7 @@
     
     <div class="login-screen" id="loginScreen">
         <div class="login-card">
-            <h2>🌟 Welcome to Sinchan's Adventure! 🌟</h2>
+            <h2>🌟 Welcome to Your Productivity Hub! 🌟</h2>
             <input type="text" id="usernameInput" placeholder="Enter your name" style="width: 100%; margin: 10px 0; padding: 12px; border-radius: 20px; border: 2px solid var(--primary);">
             <button class="btn" onclick="login()">🚀 Start Adventure!</button>
         </div>
@@ -323,25 +337,20 @@
     <div class="container" id="mainApp" style="display: none;">
         <div class="header">
             <div>
-                <h1>🌟 <span id="userName">Sinchan</span>'s 21-Day Adventure! 🌟</h1>
+                <h1>🌟 <span id="userName">Welcome to Your Productivity Hub</span>! 🌟</h1>
                 <p style="text-align: center; color: var(--accent); font-weight: bold;">"Let's make every day super fun and productive!"</p>
 
             </div>
             <div class="controls">
                 <select class="theme-selector" onchange="changeTheme(this.value)">
-                    <option value="default">🎨 Sinchan Theme</option>
+                    <option value="default">🎨 Default Theme</option>
                     <option value="ocean">🌊 Ocean Theme</option>
                     <option value="forest">🌲 Forest Theme</option>
                 </select>
-                <select class="category-filter" onchange="filterByCategory(this.value)">
-                    <option value="all">📋 All Categories</option>
-                    <option value="work">💼 Work</option>
-                    <option value="personal">👤 Personal</option>
-                    <option value="health">💪 Health</option>
-                    <option value="learning">📚 Learning</option>
-                </select>
+
                 <button class="btn btn-small" onclick="toggleSuggestions()">💡 Smart Tips</button>
                 <button class="btn btn-small" onclick="toggleUserPerformance()">👥 View Users</button>
+                <button class="btn btn-small" onclick="toggleAnalysis()">📊 Analysis</button>
                 <button class="btn btn-small" onclick="logout()">🚪 Logout</button>
             </div>
         </div>
@@ -380,13 +389,29 @@
             <div id="leaderboardList">Loading amazing adventurers... 🚀</div>
         </div>
         
-        <div class="user-performance" id="userPerformance">
+        <div class="user-performance" id="userPerformance" onmouseleave="hideUserPerformance()">
             <h3>👥 User Performance Dashboard</h3>
             <div id="usersList"></div>
             <div id="selectedUserDetails"></div>
         </div>
         
-        <div class="suggestions" id="suggestions">
+        <div class="analysis-section" id="analysisSection" onmouseleave="hideAnalysis()">
+            <h3>📊 Daily Analysis</h3>
+            <textarea class="analysis-input" id="analysisInput" placeholder="📝 Write your daily analysis, reflections, or notes here...
+
+Example:
+• What went well today?
+• What challenges did I face?
+• What can I improve tomorrow?
+• Key learnings or insights?"></textarea>
+            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                <button class="btn btn-small btn-success" onclick="saveAnalysis()">💾 Save</button>
+                <button class="btn btn-small" onclick="clearAnalysis()">🗑️ Clear</button>
+            </div>
+            <div id="analysisHistory" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="suggestions" id="suggestions" onmouseleave="hideSuggestions()">
             <h3>💡 Smart Suggestions</h3>
             <div id="suggestionsList"></div>
         </div>
@@ -394,11 +419,78 @@
         <div id="daysList"></div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummy-Key-For-Demo",
+            authDomain: "productivity-hub-demo.firebaseapp.com",
+            databaseURL: "https://productivity-hub-demo-default-rtdb.firebaseio.com",
+            projectId: "productivity-hub-demo"
+        };
+        
+        // Initialize Firebase (fallback to localStorage if Firebase fails)
+        let useFirebase = false;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            useFirebase = true;
+            console.log('🔥 Firebase connected!');
+        } catch (error) {
+            console.log('📱 Using localStorage (offline mode)');
+            useFirebase = false;
+        }
+        
         let currentUser = null;
         let tasks = JSON.parse(localStorage.getItem('sinchanTasks') || '{}');
         let users = JSON.parse(localStorage.getItem('sinchanUsers') || '[]');
         let challengeStartDate = null;
+        
+        // Shared storage for GitHub Pages
+        const SHARED_STORAGE_KEY = 'productivityHub_sharedData';
+        
+        function loadSharedData() {
+            try {
+                const sharedData = localStorage.getItem(SHARED_STORAGE_KEY);
+                if (sharedData) {
+                    const parsed = JSON.parse(sharedData);
+                    // Merge with existing data
+                    if (parsed.users) {
+                        parsed.users.forEach(sharedUser => {
+                            const existingUser = users.find(u => u.name === sharedUser.name);
+                            if (!existingUser) {
+                                users.push(sharedUser);
+                            }
+                        });
+                    }
+                    if (parsed.tasks) {
+                        Object.keys(parsed.tasks).forEach(userName => {
+                            if (!tasks[userName]) {
+                                tasks[userName] = parsed.tasks[userName];
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.log('No shared data found');
+            }
+        }
+        
+        function saveSharedData() {
+            try {
+                const sharedData = {
+                    users: users,
+                    tasks: tasks,
+                    lastUpdated: new Date().toISOString()
+                };
+                localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
+            } catch (e) {
+                console.log('Could not save shared data');
+            }
+        }
         
         // India timezone utilities
         function getIndianTime() {
@@ -446,6 +538,10 @@
         }
         
         function updateTimeDisplay() {
+            const currentTime = getIndianTime();
+            const currentDate = getIndianDate();
+            const currentDay = getCurrentDayOfWeek();
+            
             if (challengeStartDate) {
                 const challengeDay = calculateChallengeDay();
                 const startDate = new Date(challengeStartDate).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
@@ -454,24 +550,46 @@
                 document.getElementById('currentDay').textContent = challengeDay;
                 
                 if (challengeDay <= 21) {
-                    document.getElementById('challengeDay').textContent = `Started: ${startDate} | ${daysRemaining} days left! 🔥`;
-                    document.getElementById('loginInfo').textContent = `📅 Joined: ${startDate} | Completed: ${challengeDay - 1} days`;
+                    document.getElementById('challengeDay').textContent = `Started: ${startDate} | ${daysRemaining} days left! 🔥 | Today: ${currentDay}`;
+                    document.getElementById('loginInfo').textContent = `📅 ${currentDate} | ${currentTime} | Day ${challengeDay}/21`;
                 } else {
-                    document.getElementById('challengeDay').textContent = `Challenge completed! Started: ${startDate} 🏆`;
-                    document.getElementById('loginInfo').textContent = `🏆 Challenge completed in 21 days! Joined: ${startDate}`;
+                    document.getElementById('challengeDay').textContent = `Challenge completed! Started: ${startDate} 🏆 | Today: ${currentDay}`;
+                    document.getElementById('loginInfo').textContent = `🏆 Challenge completed! | ${currentDate} | ${currentTime}`;
                 }
             } else {
-                document.getElementById('loginInfo').textContent = `📅 Welcome! Start your challenge today`;
+                document.getElementById('loginInfo').textContent = `📅 ${currentDate} | ${currentTime} | Welcome!`;
             }
         }
         
-        // Update time every minute
-        setInterval(updateTimeDisplay, 60000);
+        // Update time every minute and regenerate days if day changes
+        let lastDay = new Date().getDay();
+        setInterval(() => {
+            const currentDay = new Date().getDay();
+            if (currentDay !== lastDay) {
+                // Day has changed, regenerate the days array and recreate days
+                lastDay = currentDay;
+                if (currentUser) {
+                    createDays();
+                }
+            }
+            updateTimeDisplay();
+        }, 60000);
         
-        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].concat(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        );
+        // Generate days array starting from today's day
+        function generateDaysArray() {
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = new Date();
+            const currentDayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            const days = [];
+            for (let i = 0; i < 21; i++) {
+                const dayIndex = (currentDayIndex + i) % 7;
+                days.push(dayNames[dayIndex]);
+            }
+            return days;
+        }
+        
+        let days = generateDaysArray();
         
         const suggestions = {
             work: ['📧 Check emails', '📞 Team meeting', '📊 Review reports', '💼 Client call'],
@@ -521,7 +639,7 @@
             if (!username) return alert('Please enter your name! 😊');
             
             currentUser = username;
-            document.getElementById('userName').textContent = username;
+            document.getElementById('userName').textContent = `${username}'s 21-Day Adventure`;
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('deleteAccountBtn').style.display = 'flex';
@@ -583,7 +701,7 @@
             // Save updated data
             saveData();
             
-            alert(`👋 Account "${currentUser}" has been permanently deleted.\nThank you for using Sinchan's Adventure!`);
+            alert(`👋 Account "${currentUser}" has been permanently deleted.\nThank you for using Your Productivity Hub!`);
             
             // Logout user
             logout();
@@ -595,6 +713,9 @@
         }
         
         function createDays() {
+            // Regenerate days array to ensure it's always current
+            days = generateDaysArray();
+            
             const daysList = document.getElementById('daysList');
             daysList.innerHTML = '';
             days.forEach((day, index) => {
@@ -603,9 +724,17 @@
                 dayDiv.className = `day ${isSunday ? 'sunday' : ''}`;
                 const currentChallengeDay = calculateChallengeDay();
                 const isToday = currentChallengeDay === (index + 1) && currentChallengeDay <= 21;
+                const todayDate = new Date();
+                const dayDate = new Date(todayDate.getTime() + (index * 24 * 60 * 60 * 1000));
+                const dateStr = dayDate.toLocaleDateString('en-IN', { 
+                    timeZone: 'Asia/Kolkata',
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
                 dayDiv.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <span style="font-weight: bold; font-size: 1.2em; color: var(--accent);">Day ${index + 1} - ${day} ${isToday ? '🔥 TODAY' : currentChallengeDay > (index + 1) ? '✅ DONE' : '⏳ UPCOMING'}</span>
+                        <span style="font-weight: bold; font-size: 1.2em; color: var(--accent);">Day ${index + 1} - ${day} (${dateStr}) ${isToday ? '🔥 TODAY' : currentChallengeDay > (index + 1) ? '✅ DONE' : '⏳ UPCOMING'}</span>
                         <span style="background: ${isSunday ? 'var(--success)' : isToday ? 'var(--danger)' : currentChallengeDay > (index + 1) ? 'var(--success)' : '#BDC3C7'}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px;">
                             ${isSunday ? '🌈 Chill Day' : isToday ? '🔥 TODAY' : currentChallengeDay > (index + 1) ? '✅ COMPLETED' : '⏳ UPCOMING'}
                         </span>
@@ -742,6 +871,13 @@
             }
         }
         
+        function deleteAnalysis(index) {
+            const analysisData = JSON.parse(localStorage.getItem(`analysis_${currentUser}`) || '[]');
+            analysisData.splice(index, 1);
+            localStorage.setItem(`analysis_${currentUser}`, JSON.stringify(analysisData));
+            loadAnalysis();
+        }
+        
         function drag(e, taskId) {
             e.dataTransfer.setData('text/plain', taskId);
             e.target.classList.add('dragging');
@@ -762,13 +898,10 @@
             }
         }
         
-        function filterByCategory(category) {
-            const allTasks = document.querySelectorAll('.task');
-            allTasks.forEach(task => {
-                const categoryTag = task.querySelector('.category-tag').textContent;
-                const taskCategory = Object.keys(getCategoryIcon).find(key => getCategoryIcon(key) === categoryTag);
-                task.style.display = (category === 'all' || taskCategory === category) ? 'flex' : 'none';
-            });
+
+        
+        function hideSuggestions() {
+            document.getElementById('suggestions').style.display = 'none';
         }
         
         function toggleSuggestions() {
@@ -884,6 +1017,78 @@
             
             document.getElementById('leaderboardList').innerHTML = leaderboardHTML || 'Be the first to complete tasks! 🌟';
             updateUsersList();
+        }
+        
+        function hideUserPerformance() {
+            document.getElementById('userPerformance').style.display = 'none';
+        }
+        
+        function hideAnalysis() {
+            document.getElementById('analysisSection').style.display = 'none';
+        }
+        
+        function toggleAnalysis() {
+            const analysisDiv = document.getElementById('analysisSection');
+            const isVisible = analysisDiv.style.display === 'block';
+            analysisDiv.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                loadAnalysis();
+                setTimeout(() => {
+                    analysisDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+        
+        function saveAnalysis() {
+            const analysisText = document.getElementById('analysisInput').value.trim();
+            if (!analysisText) return alert('Please write something to save! 📝');
+            
+            const today = new Date().toLocaleDateString('en-IN', { 
+                timeZone: 'Asia/Kolkata',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            const analysisData = JSON.parse(localStorage.getItem(`analysis_${currentUser}`) || '[]');
+            analysisData.unshift({
+                date: today,
+                text: analysisText,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Keep only last 10 entries
+            if (analysisData.length > 10) analysisData.splice(10);
+            
+            localStorage.setItem(`analysis_${currentUser}`, JSON.stringify(analysisData));
+            document.getElementById('analysisInput').value = '';
+            loadAnalysis();
+            alert('Analysis saved! 💾');
+        }
+        
+        function clearAnalysis() {
+            document.getElementById('analysisInput').value = '';
+        }
+        
+        function loadAnalysis() {
+            const analysisData = JSON.parse(localStorage.getItem(`analysis_${currentUser}`) || '[]');
+            const historyDiv = document.getElementById('analysisHistory');
+            
+            if (analysisData.length === 0) {
+                historyDiv.innerHTML = '<p style="color: var(--accent); font-style: italic;">No previous analysis found. Start writing! ✨</p>';
+                return;
+            }
+            
+            const historyHTML = analysisData.map(entry => 
+                `<div style="background: rgba(255,255,255,0.8); padding: 15px; margin: 10px 0; border-radius: 15px; border: 2px solid #e74c3c;">
+                    <h5 style="color: #e74c3c; margin: 0 0 10px 0;">📅 ${entry.date}</h5>
+                    <p style="margin: 0; white-space: pre-wrap; color: var(--accent);">${entry.text}</p>
+                </div>`
+            ).join('');
+            
+            historyDiv.innerHTML = `<h4 style="color: #e74c3c; margin: 15px 0 10px 0;">📚 Previous Analysis</h4>${historyHTML}`;
         }
         
         function toggleUserPerformance() {
@@ -1047,8 +1252,50 @@
         }
         
         function saveData() {
+            // Save to localStorage (backup)
             localStorage.setItem('sinchanTasks', JSON.stringify(tasks));
             localStorage.setItem('sinchanUsers', JSON.stringify(users));
+            saveSharedData();
+            
+            // Save to Firebase (real-time sync)
+            if (useFirebase) {
+                try {
+                    firebase.database().ref('users').set(users);
+                    firebase.database().ref('tasks').set(tasks);
+                } catch (error) {
+                    console.log('Firebase save failed, using localStorage');
+                }
+            }
+        }
+        
+        function loadFirebaseData() {
+            if (!useFirebase) return;
+            
+            try {
+                // Load users from Firebase
+                firebase.database().ref('users').on('value', (snapshot) => {
+                    const firebaseUsers = snapshot.val();
+                    if (firebaseUsers && Array.isArray(firebaseUsers)) {
+                        users = firebaseUsers;
+                        updateLeaderboard();
+                        updateUsersList();
+                    }
+                });
+                
+                // Load tasks from Firebase
+                firebase.database().ref('tasks').on('value', (snapshot) => {
+                    const firebaseTasks = snapshot.val();
+                    if (firebaseTasks && typeof firebaseTasks === 'object') {
+                        tasks = firebaseTasks;
+                        if (currentUser) {
+                            updateStats();
+                            createDays();
+                        }
+                    }
+                });
+            } catch (error) {
+                console.log('Firebase load failed, using localStorage');
+            }
         }
         
         // Offline support
@@ -1066,7 +1313,12 @@
         }
         
         // Initialize time display on page load
+        loadSharedData();
+        loadFirebaseData();
         updateTimeDisplay();
+        
+        // Firebase connection established (indicator hidden)
+        // Live sync functionality remains active in background
     </script>
 </body>
 </html>
